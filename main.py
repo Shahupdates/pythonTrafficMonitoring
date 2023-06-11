@@ -88,4 +88,8 @@ recommendations = recommend(pd.DataFrame(user_data, index=[0]))
 print(recommendations)
 
 # Key features and benefits of the recommendation system
-# - Uses machine learning to generate personalized
+# - Uses machine learning to generate personalized recommendations based on user data
+# - Incorporates collaborative filtering and content-based filtering for improved accuracy
+# - Supports hybrid filtering by combining the strengths of both approaches
+# - Evaluates system performance through cross-validation and A/B testing
+# - Can increase conversion rates and improve customer satisfaction through personalized recommendations
