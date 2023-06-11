@@ -101,4 +101,7 @@ def recommend(user_data):
 scores = cross_val_score(hybrid_model, X, y, cv=5)
 print(f"Mean cross-validation score: {np.mean(scores)}")
 
-# Use A/B testing to
+# Use A/B testing to evaluate the system's effectiveness
+test_data = pd.read_csv('test_data.csv')
+group_a = test_data[test_data['group'] == 'A']
+group_b = test_data[test_data['group'] == 'B']
