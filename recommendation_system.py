@@ -1,13 +1,12 @@
 import pandas as pd
+import numpy as np
 from sklearn.model_selection import train_test_split, cross_val_score
 from collaborative_filtering import CollaborativeFiltering
 from content_based_filtering import ContentBasedFiltering
 from hybrid_filtering import HybridFiltering
 
 # Gather and preprocess user data
-data = pd.read_csv('user_data.csv')
-data = data.dropna()
-data = data.drop_duplicates()
+data = pd.read_csv('user_data.csv').dropna().drop_duplicates()
 data['age_in_days'] = (pd.to_datetime('today') - pd.to_datetime(data['birth_date'])).dt.days
 data['is_male'] = (data['gender'] == 'male').astype(int)
 X = data[['age_in_days', 'is_male', 'product_interest']]
@@ -29,4 +28,5 @@ def recommend(user_data):
 
 # Test and evaluate the system
 scores = cross_val_score(hybrid_model, X, y, cv=5)
-print(f"Mean cross-validation score: {np.mean(scores)}")
+mean_score = np.mean(scores)
+print(f"Mean cross-validation score: {mean_score}")
