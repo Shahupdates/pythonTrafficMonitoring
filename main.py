@@ -1,38 +1,66 @@
 import tkinter as tk
+from tkinter import messagebox
 from recommendation_system import recommend_handler
 
-def create_gui():
-    # Create a Tkinter window
-    window = tk.Tk()
-    window.title("Recommendation System")
-    window.geometry("400x250")
+class RecommendationApp:
+    def __init__(self, root):
+        self.window = root
+        self.window.title("Recommendation System")
+        self.window.geometry("400x400")
 
-    # Create GUI elements
-    age_label = tk.Label(window, text="Age:")
-    age_label.pack()
-    age_entry = tk.Entry(window)
-    age_entry.pack()
+        self.age_var = tk.StringVar()
+        self.gender_var = tk.StringVar()
+        self.product_var = tk.StringVar()
 
-    gender_label = tk.Label(window, text="Gender:")
-    gender_label.pack()
-    gender_var = tk.StringVar()
-    gender_radio_male = tk.Radiobutton(window, text="Male", variable=gender_var, value=1)
-    gender_radio_male.pack()
-    gender_radio_female = tk.Radiobutton(window, text="Female", variable=gender_var, value=0)
-    gender_radio_female.pack()
+        self.create_widgets()
 
-    product_label = tk.Label(window, text="Product Interest:")
-    product_label.pack()
-    product_entry = tk.Entry(window)
-    product_entry.pack()
+    def create_widgets(self):
+        # Age Input
+        age_frame = tk.Frame(self.window)
+        age_frame.pack(fill='x', padx=20, pady=10)
+        tk.Label(age_frame, text="Age:").pack(side='left')
+        tk.Entry(age_frame, textvariable=self.age_var).pack(fill='x', expand=True)
 
-    recommend_button = tk.Button(window, text="Recommend", command=lambda: recommend_handler(age_entry.get(), gender_var.get(), product_entry.get(), result_label))
-    recommend_button.pack()
+        # Gender Input
+        gender_frame = tk.Frame(self.window)
+        gender_frame.pack(fill='x', padx=20, pady=10)
+        tk.Label(gender_frame, text="Gender:").pack(side='left')
+        tk.Radiobutton(gender_frame, text="Male", variable=self.gender_var, value='male').pack(side='left')
+        tk.Radiobutton(gender_frame, text="Female", variable=self.gender_var, value='female').pack(side='left')
 
-    result_label = tk.Label(window, text="Recommendations will appear here")
-    result_label.pack()
+        # Product Input
+        product_frame = tk.Frame(self.window)
+        product_frame.pack(fill='x', padx=20, pady=10)
+        tk.Label(product_frame, text="Product Interest:").pack(side='left')
+        tk.Entry(product_frame, textvariable=self.product_var).pack(fill='x', expand=True)
 
-    window.mainloop()
+        # Recommendation button
+        tk.Button(self.window, text="Recommend", command=self.recommend).pack(pady=10)
 
-if __name__ == '__main__':
-    create_gui()
+        # Results display
+        self.result_label = tk.Label(self.window, text="Recommendations will appear here")
+        self.result_label.pack(padx=20, pady=10)
+
+    def recommend(self):
+        age = self.age_var.get().strip()
+        gender = self.gender_var.get()
+        product = self.product_var.get().strip()
+
+        # Basic input validation
+        if not age.isdigit():
+            messagebox.showerror('Input Error', 'Please enter a valid age.')
+            return
+        if gender not in ['male', 'female']:
+            messagebox.showerror('Input Error', 'Please select a gender.')
+            return
+        if not product:
+            messagebox.showerror('Input Error', 'Please enter a product of interest.')
+            return
+
+        recommendations = recommend_handler(age, gender, product)
+        self.result_label.config(text=f"Recommendations: {', '.join(recommendations)}")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = RecommendationApp(root)
+    root.mainloop()
